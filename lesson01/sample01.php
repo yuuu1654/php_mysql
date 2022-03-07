@@ -25,6 +25,7 @@
 		$today = new DateTime();
 		$today->setTimezone(new DateTimeZone("Asia/Tokyo"));
 		echo "現在の時刻は", $today->format("G時 i分 s秒\n"), "です。";
+		
 	?> 
 	
 </body>
