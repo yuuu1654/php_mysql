@@ -1,7 +1,7 @@
 <?php
     session_start();
-    require("../function.php");
-	require("../dbconnect.php");
+    require("function.php");
+	require("dbconnect.php");
 
     //配列の初期化
     $error = [];
@@ -18,6 +18,32 @@
         //フォームが空欄の時の処理
         if ($email === "" || $password === ""){
             $error["login"] = "blank";
+        }else{
+            //ログインチェック
+            $db = dbconnect();
+            //SQL文のセット
+            $stmt = $db->prepare("select id, name, password from members where email=? limit 1"); //limitで会員のメールアドレスの流出を防ぐ
+            if (!$stmt){
+                die($db->error);
+            }
+            //データの受け取り
+            $stmt->bind_param("s", $email);
+            $success = $stmt->execute();
+            if (!$success){
+                die($db->error);
+            }
+            $stmt->bind_result($id, $name, $hash);
+            $stmt->fetch();
+
+            //入力されたパスワードと保存されているハッシュ化されたパスワードを照合
+            if (password_verify($password, $hash)){
+                //ログイン成功
+                var_dump($hash);
+            } else {
+                var_dump($password);
+                var_dump($hash);
+                $error["login"] = "failed";
+            }
         }
     }
 ?>
@@ -46,16 +72,17 @@
             <dl>
                 <dt>メールアドレス</dt>
                 <dd>
-                    <input type="text" name="email" size="35" maxlength="255" value=""/>
+                    <input type="text" name="email" size="35" maxlength="255" value="<?php echo h($email); ?>"/>
                     <?php if (isset($error["login"]) && $error["login"] === "blank"): ?>
                         <p class="error">* メールアドレスとパスワードをご記入ください</p>
                     <?php endif; ?>
-                    
-                    <p class="error">* ログインに失敗しました。正しくご記入ください。</p>
+                    <?php if (isset($error["login"]) && $error["login"] === "failed"): ?>
+                        <p class="error">* ログインに失敗しました。正しくご記入ください。</p>
+                    <?php endif; ?>
                 </dd>
                 <dt>パスワード</dt>
                 <dd>
-                    <input type="password" name="password" size="35" maxlength="255" value=""/>
+                    <input type="password" name="password" size="35" maxlength="255" value="<?php echo h($password); ?>"/>
                 </dd>
             </dl>
             <div>

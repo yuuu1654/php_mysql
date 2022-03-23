@@ -22,6 +22,7 @@
 		}
 		//パスワードのみハッシュ化して保存
 		$password = password_hash($form["passowrd"], PASSWORD_DEFAULT);
+		//データの受け取り
 		$stmt->bind_param("ssss", $form["name"], $form["email"], $password, $form["image"]);
 		//SQLの実行
 		$success = $stmt->execute();
