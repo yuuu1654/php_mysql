@@ -12,7 +12,7 @@
 	}
 
 	//登録ボタンが押されたらDBに登録
-	if($_SERVER["REQUEST_METHOD"] === "POST"){
+	if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 		$db = dbconnect();
 		//SQL文のセット
@@ -22,6 +22,8 @@
 		}
 		//パスワードのみハッシュ化して保存
 		$password = password_hash($form["passowrd"], PASSWORD_DEFAULT);
+		$_SESSION["password"] = $password;
+		var_dump($_SESSION["password"]);
 		//データの受け取り
 		$stmt->bind_param("ssss", $form["name"], $form["email"], $password, $form["image"]);
 		//SQLの実行
