@@ -9,11 +9,11 @@
     $password = "";
 
     //フォームからポスト送信された時の処理
-    if($_SERVER["REQUEST_METHOD"] === "POST"){
+    if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
         //フォームの内容を受け取る
         $email = filter_input(INPUT_POST, "email", FILTER_SANITIZE_EMAIL);
-        $password = filter_input(INPUT_POST, "password", FILTER_SANITIZE_STRING);
+        $password = filter_input(INPUT_POST, "password", FILTER_SANITIZE_STRING); //平文のパスワード
 
         //フォームが空欄の時の処理
         if ($email === "" || $password === ""){
@@ -36,12 +36,21 @@
             $stmt->fetch();
 
             //入力されたパスワードと保存されているハッシュ化されたパスワードを照合
-            if (password_verify($password, $hash)){
+            //password_verify($password, $hash)
+            $password_hash = $_SESSION["password"];
+            var_dump($password_hash);
+            var_dump($hash);
+            if ($password_hash === $hash){
                 //ログイン成功
-                var_dump($hash);
+                echo "ログイン成功しました";
+                session_regenerate_id();  //セッションハイジャック対策
+                $_SESSION["id"] = $id;
+                $_SESSION["name"] = $name;
+                header("Location: index.php");
+                exit();
             } else {
-                var_dump($password);
-                var_dump($hash);
+                // var_dump($password_hash);
+                // var_dump($hash);
                 $error["login"] = "failed";
             }
         }
