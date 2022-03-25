@@ -90,8 +90,11 @@
                     <img src="member_picture/<?php echo h($picture); ?>" width="48" height="48" alt=""/>
                 <?php endif; ?>
                 <p><?php echo h($message); ?><span class="name">（<?php echo h($name); ?>）</span></p>
-                <p class="day"><a href="view.php?id="><?php echo h($created_at); ?></a>
+                <p class="day"><a href="view.php?id=<?php echo h($id); ?>"><?php echo h($created_at); ?></a>
+                <!-- 投稿の作者とログインIDが同じなら投稿を削除できる -->
+                <?php if ($_SESSION["id"] === $member_id): ?>
                     [<a href="delete.php?id=" style="color: #F33;">削除</a>]
+                <?php endif; ?>
                 </p>
             </div>
         <?php endwhile; ?>
