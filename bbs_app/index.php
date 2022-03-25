@@ -93,7 +93,7 @@
                 <p class="day"><a href="view.php?id=<?php echo h($id); ?>"><?php echo h($created_at); ?></a>
                 <!-- 投稿の作者とログインIDが同じなら投稿を削除できる -->
                 <?php if ($_SESSION["id"] === $member_id): ?>
-                    [<a href="delete.php?id=" style="color: #F33;">削除</a>]
+                    [<a href="delete.php?id=<?php echo h($id); ?>" style="color: #F33;">削除</a>]
                 <?php endif; ?>
                 </p>
             </div>
